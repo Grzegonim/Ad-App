@@ -14,7 +14,7 @@ const authRoutes = require('./routes/auth.routes.js');
 mongoose.connect('mongodb://localhost:27017/advertDB', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.once('open', () => {
-  console.log('Connected to the advert datebase');
+  console.log('Connected to the advert datebase', process.env.NODE_ENV);
 });
 db.on('error', err => console.log('Error' + err));
 
@@ -22,25 +22,33 @@ app.use(express.static(path.join(__dirname, '/client/build')));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-if(process.env.NODE_ENV !== 'production') {
+/*if(process.env.NODE_ENV !== 'production') {
   app.use(
     cors({
       origin: ['http://localhost:3000'],
       credentials: true,
     })
   );
-}
+}*/
+app.use(
+  cors({
+    origin: ['http://localhost:3000'],
+    methods: ["POST", "PUT", "GET", "OPTIONS", "DELETE", "HEAD"],
+    credentials: true,
+  })
+);
 app.use(session({ 
   secret: 'xyz', 
   store: MongoStore.create({
   mongoUrl: 'mongodb://localhost:27017/advertDB'
   }),
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
-    secure: process.env.NODE_ENV == 'production',
+    //secure: process.env.NODE_ENV == 'production',
   }
 }));
+
 
 app.use('/api', usersRoutes);
 app.use('/api', adsRoutes);

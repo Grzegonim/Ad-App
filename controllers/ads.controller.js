@@ -79,19 +79,15 @@ exports.changeAds = async (req, res) => {
 
 exports.deleteAds = async (req, res) => {
   try {
-    if (req.session.login === req.body.seller) {
-      const ad = Advert.findById({ _id: req.params.id });
+    const ad = await Advert.findById({ _id: req.params.id });
       if(ad) {
         await Advert.deleteOne({ _id: req.params.id });
         res.json({ message: 'Advert is deleted' });
       } else {
         res.status(404).json({ message: 'Advert not found' });
       }  
-    } else {
-      res.status(401).json({ message: 'You are not authorized' });
-    }
-  }
+    } 
   catch(err) {
-    res.status(500).json({ message: err });
-  }
+      res.status(500).json({ message: err });
+    }
 };
