@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { startRequest, endRequest, addRequest } from './requestReducer';
+import { API_URL } from '../../src/config'
 
 
 // selectors
@@ -24,7 +25,7 @@ export const fetchAds = () => {
   return async (dispatch) => {
     dispatch(startRequest())
     try {
-      let res = await axios.get('http://localhost:8001/api/ads/')
+      let res = await axios.get(`${API_URL}/api/ads`)
       dispatch(loadAds(res.data))
       dispatch(endRequest())
     }
@@ -47,7 +48,7 @@ export const addOffer = (title, price, localization, date, description, photo) =
       dispatch(startRequest())
 
       const res = await axios.post(
-        'http://localhost:8001/api/ads/',
+        `${API_URL}/api/ads`,
         data,
         { withCredentials: true },
         {
@@ -76,7 +77,7 @@ export const editOffer = (title, price, localization, date, description, photo, 
       dispatch(startRequest())
 
       await axios.put(
-        'http://localhost:8001/api/ads/' + id,
+        `${API_URL}/api/ads/${id}`,
         data,
         { withCredentials: true },
         {
@@ -98,7 +99,7 @@ export const removeOffer = (id) => {
       dispatch(startRequest())
 
       await axios.delete(
-        'http://localhost:8001/api/ads/' + id,
+        `${API_URL}/api/ads/${id}`,
         { withCredentials: true },
         {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -116,7 +117,7 @@ export const removeOffer = (id) => {
 export const searchOffer = (searchResoult) => {
   return async (dispatch) => {
     try {
-      let res = await axios.get('http://localhost:8001/api/ads/search/' + searchResoult)
+      let res = await axios.get(`${API_URL}/api/ads/search/${searchResoult}`)
       dispatch(loadAds(res.data));
     }
     catch (err) {
