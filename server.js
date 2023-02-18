@@ -30,13 +30,16 @@ app.use(express.json());
     })
   );
 }*/
-app.use(
-  cors({
-    origin: ['http://localhost:3000'],
-    methods: ["POST", "PUT", "GET", "OPTIONS", "DELETE", "HEAD"],
-    credentials: true,
-  })
-);
+if(process.env.NODE_ENV !== 'production') {
+  app.use(
+    cors({
+      origin: ['http://localhost:3000'],
+      methods: ["POST", "PUT", "GET", "OPTIONS", "DELETE", "HEAD"],
+      credentials: true,
+    })
+  );
+};
+
 app.use(session({ 
   secret: 'xyz', 
   store: MongoStore.create({
@@ -54,6 +57,10 @@ app.use('/api', usersRoutes);
 app.use('/api', adsRoutes);
 app.use('/auth', authRoutes);
 
-app.listen(8001, (req, res) => {
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
+});
+
+app.listen(process.env.PORT || 8001, (req, res) => {
   console.log('Server is running on port: 8001');
 });
