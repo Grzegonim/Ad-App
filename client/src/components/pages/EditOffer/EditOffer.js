@@ -1,7 +1,7 @@
 import { getOfferById } from "../../../redux/adsReducer";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { useState } from "react";
 import { editOffer, removeOffer } from "../../../redux/adsReducer";
 import { useDispatch } from "react-redux";
@@ -18,25 +18,45 @@ const EditOffer = () => {
   const [date, setDate] = useState(offer.date);
   const [description, setDescription] = useState(offer.content);
   const [photo, setPhoto] = useState(offer.pic);
+  const [show, setShow] = useState(false);
 
   const handleSubmit = e => {
     e.preventDefault();
     dispatch(editOffer(title, price, localization, date, description, photo, offer._id));
+    setTimeout(() => {
+      return navigate('/');
+    }, 1500);  
   };
 
-  const handleDelete = e => {
+  const handleDelete = async e => {
     e.preventDefault();
+    setShow(false);
     dispatch(removeOffer(id))
-    navigate("/");
-  };
+    return navigate('/')
+};
 
   return (
     <Form className="mt-2 mb-2" onSubmit={handleSubmit}>
 
       <div className="d-flex justify-content-between">
         <h1>Edit offer</h1>
-        <Button onClick={handleDelete} variant="danger">Delete offer</Button>
+        <Button onClick={() => setShow(true)} variant="danger">Delete offer</Button>
       </div>
+
+      <Modal show={show} onHide={() => setShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Removing offer</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Do you want to remove this offer?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShow(false)}>
+            No
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            Delete offer
+          </Button>
+        </Modal.Footer>
+      </Modal>
         
       <Form.Group controlId="formTitle" className="mt-2 mb-2">
         <Form.Label>Title:</Form.Label>

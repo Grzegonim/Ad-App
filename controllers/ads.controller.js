@@ -40,7 +40,7 @@ exports.addAds = async (req, res) => {
     if (title.length > 10 && title.length < 50 && content.length > 20 && content.length < 1000 && imageExtensions.includes(fileType)) {
       const ad = new Advert({ title, content, date, pic: req.file.filename, price, localization, seller: req.session.userId });
       await ad.save();
-      res.json({ message: 'Add advert ' + title });  
+      res.json( ad );  
     } else {
       fs.unlinkSync(req.file.path);
       res.status(500).json({ message: 'Title or content have wrong amount of characters' });

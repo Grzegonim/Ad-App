@@ -40,30 +40,6 @@ const Login = () => {
     catch (err) {
       setStatus('serverError');
     }
-
-    /*const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ login, password })
-    };
-    console.log(login, password)
-    setStatus('loading');
-    fetch(`${API_URL}auth/login`, options)
-      .then(res => {
-        if (res.status === 200) {
-          setStatus('success');
-          dispatch(logIn(login));
-        } else if (res.status === 400) {
-          setStatus('clientError');
-        } else {
-          setStatus('serverError');
-        }
-      })
-      .catch(err => {
-        setStatus('serverError');
-      });*/
   };
 
   return (

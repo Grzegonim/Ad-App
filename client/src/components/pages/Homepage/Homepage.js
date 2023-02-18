@@ -5,18 +5,24 @@ import SmallOffer from "../../features/SmallOffer/SmallOffer";
 import { Container, Row } from "react-bootstrap";
 import shortid from "shortid";
 import { getRequest } from "../../../redux/requestReducer";
+import { Spinner } from "react-bootstrap";
 
 const Homepage = () => {
   const dispatch = useDispatch();
   const ads = useSelector(adsList).sort((a,b) => a.title.localeCompare(b.title));
-  useEffect(() => dispatch(fetchAds()), [dispatch]);
   const request = useSelector(getRequest)
-  console.log(request)
-  if (request.pending) return <h1>Loading...</h1>
+  
+  useEffect(() => {
+    dispatch(fetchAds());
+  }, [dispatch]);
+
+  if (request.pending) return (
+    <Spinner animation="border" role="status" className="block mx-auto">
+      <span className="visually-hidden">Loading</span>
+    </Spinner>
+  )
   if (request.error) return <h1>Error...</h1>
-  if (request.success) return (
-  
-  
+  if (request.success === true) return (
     <Container>
       <Row>
         {ads.map(offer => <SmallOffer key={shortid()} {...offer} />)}

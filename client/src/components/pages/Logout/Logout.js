@@ -18,15 +18,6 @@ const Logout = () => {
       }); 
       
       navigate('/');
-
-    /*const options = {
-      method: 'DELETE'
-    };
-  
-    fetch(`${API_URL}/auth/logout`, options)
-      .then(() => {
-        dispatch(logOut());
-      });  */
   }, [dispatch]);
 
   return null;

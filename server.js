@@ -11,7 +11,7 @@ const usersRoutes = require('./routes/users.routes.js');
 const adsRoutes = require('./routes/ads.routes.js');
 const authRoutes = require('./routes/auth.routes.js');
 
-mongoose.connect('mongodb://localhost:27017/advertDB', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://Grzegonim:tl31njirDbdh4OnF@cluster0.xzoiqmy.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'advertDB' });
 const db = mongoose.connection;
 db.once('open', () => {
   console.log('Connected to the advert datebase', process.env.NODE_ENV);

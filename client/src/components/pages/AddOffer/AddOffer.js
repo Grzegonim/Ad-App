@@ -1,9 +1,11 @@
 import { Form, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { activeUser } from '../../../redux/userReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { addOffer } from '../../../redux/adsReducer';
 import { useNavigate } from 'react-router-dom';
+import { getRequest } from "../../../redux/requestReducer";
+import { Alert } from 'react-bootstrap';
 
 const AddOffer = () => {
   const dispatch = useDispatch();
@@ -15,31 +17,32 @@ const AddOffer = () => {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState(null);
+  const [status, setStatus] = useState(false);
+  const request = useSelector(getRequest)
 
   const handleSubmit = e => {
     e.preventDefault();
     dispatch(addOffer(title, price, localization, date, description, photo, user));
-    return navigate('/')
-    /*const data = new FormData();
-    data.append('title', title);
-    data.append('price', price);
-    data.append('localization', localization);
-    data.append('date', date);
-    data.append('content', description);
-    data.append('pic', photo);
+    setStatus(true);
+  };
 
-      axios.post(
-        'http://localhost:8001/api/ads/',
-      data,
-      { withCredentials: true },
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
-    );*/
-}
+  useEffect(() => {
+    if (user === null) return navigate('/');
+  }, [user]);
+
+  if (request.success === 'next') {
+    return navigate('/');
+  };
 
   return (
     <Form onSubmit={handleSubmit} className="mb-2 mt-2 col-8 mx-auto">
+
+      {status === true && (
+        <Alert variant="success">
+          <Alert.Heading>Relax!</Alert.Heading>
+          <p>You will return to homepage after add offer!</p>
+        </Alert>
+      )}
 
       <Form.Group controlId="formTitle" className="mb-2 mt-2">
         <Form.Label>Title:</Form.Label>

@@ -1,11 +1,10 @@
 import axios from 'axios';
-import { startRequest, endRequest } from './requestReducer';
+import { startRequest, endRequest, addRequest } from './requestReducer';
 
 
 // selectors
 export const adsList = state => state.ads;
 export const getOfferById = (state, offerId) => state.ads.find(offer => offer._id === offerId);
-//export const getRequest = state => state.request;
 
 //actions 
 const createActionName = actionName => `app/ads/${actionName}`;
@@ -15,27 +14,23 @@ const ADD_AD = createActionName('ADD_AD');
 const EDIT_AD = createActionName('EDIT_AD');
 const REMOVE_AD = createActionName('REMOVE_AD');
 
-/*const START_REQUEST = createActionName('START_REQUEST');
-const END_REQUEST = createActionName('END_REQUEST');
-const ERROR_REQUEST = createActionName('ERROR_REQUEST');*/
-
 // action creators
 export const loadAds = payload => ({ type: LOAD_ADS, payload});
 export const addAd = payload => ({ type: ADD_AD, payload});
 export const editAd = payload => ({ type: EDIT_AD, payload });
 export const removeAd = payload => ({ type: REMOVE_AD, payload });
 
-/*export const startRequest = () => ({ type: START_REQUEST });
-export const endRequest = () => ({ type: END_REQUEST });
-export const errorRequest = () => ({ type: ERROR_REQUEST });*/
-
 export const fetchAds = () => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(startRequest())
-    fetch('http://localhost:8001/api/ads/')
-      .then(res => res.json())
-      .then(ads => dispatch(loadAds(ads)))
-      .then(dispatch(endRequest()))
+    try {
+      let res = await axios.get('http://localhost:8001/api/ads/')
+      dispatch(loadAds(res.data))
+      dispatch(endRequest())
+    }
+    catch (err) {
+      
+    }
   }
 };
 
@@ -51,7 +46,7 @@ export const addOffer = (title, price, localization, date, description, photo) =
       data.append('pic', photo);
       dispatch(startRequest())
 
-      await axios.post(
+      const res = await axios.post(
         'http://localhost:8001/api/ads/',
         data,
         { withCredentials: true },
@@ -59,9 +54,8 @@ export const addOffer = (title, price, localization, date, description, photo) =
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       )
-      dispatch(addAd({title: title, price: price, date: date, localization: localization, description: description, pic: photo}));
-      dispatch(endRequest())
-
+      await dispatch(addAd(res.data));
+      dispatch(addRequest())
     }
     catch (err) {
       console.log(err)
@@ -79,7 +73,8 @@ export const editOffer = (title, price, localization, date, description, photo, 
       data.append('date', date);
       data.append('content', description);
       data.append('pic', photo);
-  
+      dispatch(startRequest())
+
       await axios.put(
         'http://localhost:8001/api/ads/' + id,
         data,
@@ -88,7 +83,8 @@ export const editOffer = (title, price, localization, date, description, photo, 
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       )
-      dispatch(editAd({ _id: id, title, content: description, date, pic: photo, price, localization }));
+      await dispatch(editAd({ _id: id, title, content: description, date, pic: photo, price, localization }));
+      dispatch(endRequest())
     }
     catch (err) {
       console.log(err)
@@ -99,6 +95,8 @@ export const editOffer = (title, price, localization, date, description, photo, 
 export const removeOffer = (id) => {
   return async (dispatch) => {
     try {
+      dispatch(startRequest())
+
       await axios.delete(
         'http://localhost:8001/api/ads/' + id,
         { withCredentials: true },
@@ -106,7 +104,8 @@ export const removeOffer = (id) => {
           headers: { 'Content-Type': 'multipart/form-data' },
         }
       )
-      dispatch(removeAd({ _id: id }));
+      await dispatch(removeAd({ _id: id }));
+      dispatch(endRequest())
     }
     catch (err) {
       console.log(err)
@@ -114,6 +113,17 @@ export const removeOffer = (id) => {
   }
 }
 
+export const searchOffer = (searchResoult) => {
+  return async (dispatch) => {
+    try {
+      let res = await axios.get('http://localhost:8001/api/ads/search/' + searchResoult)
+      dispatch(loadAds(res.data));
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+}
 
 const reducer = (statePart = [], action) => {
   switch (action.type) {
@@ -124,22 +134,7 @@ const reducer = (statePart = [], action) => {
     case EDIT_AD:
       return [...statePart.map((offer) => offer._id === action.payload._id ? {...offer, ...action.payload} : offer)]
     case REMOVE_AD:
-      return [statePart.filter((offer) => offer._id !== action.payload._id)]
-      /*case START_REQUEST:
-        return {
-          ...statePart,
-          request: { pending: true, error: null, success: false },
-        };
-      case END_REQUEST:
-        return {
-          ...statePart,
-          request: { pending: false, error: null, success: true },
-        };
-      case ERROR_REQUEST:
-        return {
-          ...statePart,
-          request: { pending: false, error: action.error, success: false },
-        };*/
+      return statePart.filter((offer) => offer._id !== action.payload._id)
     default:
       return statePart
   };
