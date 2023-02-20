@@ -25,7 +25,6 @@ export const fetchAds = () => {
   return async (dispatch) => {
     dispatch(startRequest())
     try {
-      console.log(API_URL)
       let res = await axios.get(`${API_URL}/api/ads`)
       dispatch(loadAds(res.data))
       dispatch(endRequest())

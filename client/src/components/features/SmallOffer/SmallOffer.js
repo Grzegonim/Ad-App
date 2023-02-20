@@ -3,12 +3,13 @@ import styles from './SmallOffer.module.scss';
 import { Link } from 'react-router-dom';
 import { activeUser } from "../../../redux/userReducer";
 import { useSelector } from "react-redux";
+import { IMGS_URL } from "../../../config";
 
 const SmallOffer = ({title, pic, localization, _id, seller }) => {
   const user = useSelector(activeUser);
   return (
     <Col className={styles.offer + " col-4 mb-1 mt-1"}>
-        <img src={`http://localhost:8001/uploads/${pic}`} alt="offer"></img>
+        <img src={IMGS_URL + pic} alt="offer"></img>
         <span className={styles.title}><b>{title}</b></span>
         <span className="mb-1"><b>Localization: </b>{localization}</span>
         <div className="d-flex justify-content-between">

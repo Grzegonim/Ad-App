@@ -2,6 +2,7 @@ import { getOfferById } from "../../../redux/adsReducer";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styles from './Offer.module.scss';
+import { IMGS_URL } from "../../../config";
 
 const Offer = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const Offer = () => {
   return (
     <div>
       <div className={styles.photoContainer}>
-        <img src={`http://localhost:8001/uploads/${offer.pic}`} alt="offer"></img>
+        <img src={IMGS_URL + offer.pic} alt="offer"></img>
         <div className={styles.info}>
           <span className={styles.title}>{offer.title}</span>
           <span className={styles.price}><b>Price:</b> {offer.price}$</span>
