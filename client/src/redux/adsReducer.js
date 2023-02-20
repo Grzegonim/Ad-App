@@ -105,7 +105,7 @@ export const removeOffer = (id) => {
         }
       )
       await dispatch(removeAd({ _id: id }));
-      dispatch(removeRequest())
+      //dispatch(removeRequest())
     }
     catch (err) {
       console.log(err)

@@ -30,7 +30,7 @@ const AddOffer = () => {
     if (user === null) return navigate('/');
   }, [user]);
 
-  if (request.success === 'next') {
+  if (request.success === 'adding') {
     return navigate('/');
   };
 

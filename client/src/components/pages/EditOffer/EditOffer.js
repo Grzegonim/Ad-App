@@ -6,7 +6,6 @@ import { useState } from "react";
 import { editOffer, removeOffer } from "../../../redux/adsReducer";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getRequest } from "../../../redux/requestReducer";
 
 const EditOffer = () => {
   const { id } = useParams();
@@ -20,7 +19,6 @@ const EditOffer = () => {
   const [description, setDescription] = useState(offer.content);
   const [photo, setPhoto] = useState(offer.pic);
   const [show, setShow] = useState(false);
-  const request = useSelector(getRequest)
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -34,9 +32,7 @@ const EditOffer = () => {
     e.preventDefault();
     setShow(false);
     dispatch(removeOffer(id))
-    if (request.success === 'removing') {
-      return navigate('/');
-    };
+    return navigate('/')
 };
 
   return (
