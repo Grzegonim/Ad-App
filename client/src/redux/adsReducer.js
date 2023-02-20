@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { startRequest, endRequest, addRequest } from './requestReducer';
+import { startRequest, endRequest, addRequest, removeRequest } from './requestReducer';
 import { API_URL } from '../../src/config'
 
 
@@ -97,7 +97,6 @@ export const removeOffer = (id) => {
   return async (dispatch) => {
     try {
       dispatch(startRequest())
-
       await axios.delete(
         `${API_URL}/api/ads/${id}`,
         { withCredentials: true },
@@ -106,7 +105,7 @@ export const removeOffer = (id) => {
         }
       )
       await dispatch(removeAd({ _id: id }));
-      dispatch(endRequest())
+      dispatch(removeRequest())
     }
     catch (err) {
       console.log(err)

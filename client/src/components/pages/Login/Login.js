@@ -56,8 +56,8 @@ const Login = () => {
 
       {status === "serverError" && (
         <Alert variant="danger">
-        <Alert.Heading>Something went wrong</Alert.Heading>
-        <p>Unexpected error... Please try again</p>
+        <Alert.Heading>Wrong data</Alert.Heading>
+        <p>Login or password are incorrect!</p>
       </Alert>
       )}
 
