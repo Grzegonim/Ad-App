@@ -14,7 +14,7 @@ const authRoutes = require('./routes/auth.routes.js');
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'advertDB' });
 const db = mongoose.connection;
 db.once('open', () => {
-  console.log('Connected to the advert datebase', process.env.NODE_ENV);
+  console.log('Connected to the advert datebase');
 });
 db.on('error', err => console.log('Error' + err));
 
